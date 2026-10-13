@@ -47,7 +47,12 @@ or press **Ctrl+Shift+D**. The library previews the complete function, including
 anonymous helpers; click **Save draft** to keep it. **Ctrl+Shift+C** copies the whole function directly.
 These actions are also available from the script's right-click menu.
 
-Open **Drafts / templates** on the toolbar or press **Ctrl+Shift+L** to find saved drafts. Search by
+Open **Drafts / templates** on the toolbar or press **Ctrl+Shift+L** to find saved drafts.
+Use **Add draft** or **Add template** to create your own entry manually: enter a name, optional notes,
+and type or paste Lua source, then click **Save draft** or **Save template**. Custom templates are
+saved source snippets, editable and reusable like drafts, and remain available after restarting.
+
+Search by
 name, notes or source, preview/edit the source, rename the callback, then insert it or open a new
 script. Insertion is one undo step and occurs after the enclosing function when the cursor is inside
 one. Duplicate function names are rejected. Drafts retain their game mode, source location and notes,

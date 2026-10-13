@@ -11,9 +11,14 @@ using System.IO;
 class Program
 {
     [STAThread]
-    static void Main()
+    static void Main(string[] args)
     {
         var app = new App(); app.InitializeComponent();
+        if (args.Contains("--manual"))
+        {
+            VerifyManualLibrary();
+            return;
+        }
         var window = new MainWindow();
         window.Opacity = 0;
         window.ShowInTaskbar = false;
@@ -64,6 +69,35 @@ class Program
         }
         finally { if (Directory.Exists(store.DirectoryPath)) Directory.Delete(store.DirectoryPath, true); }
         Console.WriteLine("DS3 script, goal navigation and GNL UI rendered successfully.");
+    }
+    static void VerifyManualLibrary()
+    {
+        var store = new ScriptDraftStore(Path.Combine(Path.GetTempPath(), "LuaStudioManualUI-" + Guid.NewGuid()));
+        try
+        {
+            var library = new ScriptLibraryWindow(GameMode.DS3, true, "MyEnemy100000", store: store);
+            foreach (bool isTemplate in new[] { false, true })
+            {
+                Invoke(library, isTemplate ? "OnAddTemplate" : "OnAddDraft");
+                var name = (System.Windows.Controls.TextBox)library.FindName("NameBox");
+                var source = (System.Windows.Controls.TextBox)library.FindName("SourceBox");
+                if (source.Text.Length != 0) throw new Exception("Manual entry should start empty");
+                Invoke(library, "OnSaveDraft");
+                if (store.Load().Count != (isTemplate ? 1 : 0)) throw new Exception("Empty entry was saved");
+                name.Text = isTemplate ? "My custom template" : "My manual draft";
+                source.Text = "function MyEnemy_Act04(ai, goal) return ai end";
+                Invoke(library, "OnSaveDraft");
+                var saved = store.Load().Single(d => d.Name == name.Text);
+                if (saved.IsTemplate != isTemplate || saved.Source != source.Text) throw new Exception("Manual entry lost type or source");
+                RenderWindow(library, isTemplate ? "tools/UiProbe/manual-template.png" : "tools/UiProbe/manual-draft.png", 1080, 760);
+            }
+            var reopened = new ScriptLibraryWindow(GameMode.DS3, true, "MyEnemy100000", store: new ScriptDraftStore(store.DirectoryPath));
+            var reopenedList = (System.Windows.Controls.ListBox)reopened.FindName("LibraryList");
+            if (reopenedList.Items.Cast<ScriptLibraryWindow.LibraryItem>().Count(i => i.Draft is not null) != 2)
+                throw new Exception("Manual drafts/templates missing after reopen");
+        }
+        finally { if (Directory.Exists(store.DirectoryPath)) Directory.Delete(store.DirectoryPath, true); }
+        Console.WriteLine("Manual draft/template creation, empty-source validation, saving and reopening verified.");
     }
     static void Render(MainWindow window, string path, int width, int height)
     {

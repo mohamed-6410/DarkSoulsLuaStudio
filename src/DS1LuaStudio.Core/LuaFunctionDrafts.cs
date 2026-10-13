@@ -148,11 +148,12 @@ public sealed record ScriptDraft
     public Guid Id { get; init; } = Guid.NewGuid();
     public required string Name { get; init; }
     public GameMode GameMode { get; init; }
+    public bool IsTemplate { get; init; }
     public required string Source { get; init; }
     public string Notes { get; init; } = "";
     public string Origin { get; init; } = "";
     public DateTime SavedUtc { get; init; } = DateTime.UtcNow;
-    public string Caption => $"[{GameMode}] {Name}";
+    public string Caption => $"{(IsTemplate ? "Template · " : "")}[{GameMode}] {Name}";
 }
 
 /// <summary>User-owned draft files. A malformed draft does not hide the rest of the library.</summary>

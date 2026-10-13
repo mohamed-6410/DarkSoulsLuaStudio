@@ -26,7 +26,7 @@ public partial class ScriptLibraryWindow : Window
         _store = store ?? new ScriptDraftStore(DraftDirectory);
         InsertButton.IsEnabled = canInsert;
         GoalNameBox.Text = goalName;
-        LibraryPathText.Text = "Your drafts: " + _store.DirectoryPath;
+        LibraryPathText.Text = "Your drafts and templates: " + _store.DirectoryPath;
         foreach (var draft in _store.Load()) _items.Add(new LibraryItem(draft.Caption, draft, null));
         foreach (var template in EnemyScriptTemplates.All) _items.Add(new LibraryItem("Template · " + template.Name, null, template));
         if (initialDraft is not null) _items.Insert(0, new LibraryItem(initialDraft.Caption, initialDraft, null));
@@ -49,9 +49,10 @@ public partial class ScriptLibraryWindow : Window
     {
         if (!_ready || LibraryList.SelectedItem is not LibraryItem item) return;
         _editingDraft = item.Draft;
+        SaveButton.Content = item.Draft?.IsTemplate == true ? "Save template" : "Save draft";
         NameBox.Text = item.Draft?.Name ?? item.Template!.Name;
         NotesBox.Text = item.Draft?.Notes ?? "Choose character-specific attack IDs; register the callbacks in your goal/global tables.";
-        DescriptionText.Text = item.Draft is { } draft ? $"Saved {draft.GameMode} draft · {draft.Origin}" : item.Template!.Description;
+        DescriptionText.Text = item.Draft is { } draft ? $"{draft.GameMode} {(draft.IsTemplate ? "template" : "draft")} · {draft.Origin}" : item.Template!.Description;
         TemplateFields.Visibility = item.Template is null ? Visibility.Collapsed : Visibility.Visible;
         if (item.Template is { } template)
         {
@@ -96,18 +97,34 @@ public partial class ScriptLibraryWindow : Window
         if (string.IsNullOrWhiteSpace(SourceBox.Text)) { StatusText.Text = "The preview is empty."; return false; }
         return true;
     }
+    private void OnAddDraft(object sender, RoutedEventArgs e) => AddManual(false);
+    private void OnAddTemplate(object sender, RoutedEventArgs e) => AddManual(true);
+    private void AddManual(bool isTemplate)
+    {
+        var draft = new ScriptDraft { Name = isTemplate ? "New template" : "New draft", Source = "",
+            GameMode = _mode, IsTemplate = isTemplate, Origin = "Manually added" };
+        var item = new LibraryItem(draft.Caption, draft, null);
+        _items.Insert(0, item);
+        FilterBox.Text = "";
+        RefreshList();
+        LibraryList.SelectedItem = item;
+        StatusText.Text = $"Enter a name, notes and Lua source, then click Save {(isTemplate ? "template" : "draft")}.";
+        NameBox.Focus();
+        NameBox.SelectAll();
+    }
     private void OnSaveDraft(object sender, RoutedEventArgs e)
     {
         if (!CheckSource()) return;
         try
         {
             var draft = new ScriptDraft { Id = _editingDraft?.Id ?? Guid.NewGuid(), Name = NameBox.Text.Trim(), Source = SourceBox.Text,
-                GameMode = ResultGameMode, Notes = NotesBox.Text, Origin = _editingDraft?.Origin ?? "Enemy template", SavedUtc = DateTime.UtcNow };
+                GameMode = ResultGameMode, IsTemplate = _editingDraft?.IsTemplate ?? false,
+                Notes = NotesBox.Text, Origin = _editingDraft?.Origin ?? "Enemy template", SavedUtc = DateTime.UtcNow };
             _store.Save(draft);
             _items.RemoveAll(i => i.Draft?.Id == draft.Id);
             var item = new LibraryItem(draft.Caption, draft, null); _items.Insert(0, item);
             FilterBox.Text = ""; RefreshList(); LibraryList.SelectedItem = item;
-            StatusText.Text = "Draft saved. It will be available after restarting the editor.";
+            StatusText.Text = $"{(draft.IsTemplate ? "Template" : "Draft")} saved. It will be available after restarting the editor.";
         }
         catch (Exception ex) { StatusText.Text = "Could not save draft: " + ex.Message; }
     }

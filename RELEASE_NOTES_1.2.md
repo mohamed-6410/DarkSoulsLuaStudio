@@ -8,6 +8,7 @@ Windows x64 editor for Dark Souls: Prepare to Die Edition and Dark Souls III AI 
 - Game-specific autocomplete and highlighting, including 10,480 DS3 identifiers.
 - Goal links and F12 navigation across scripts and archives.
 - Function drafts with previews, safe renaming, insertion and persistent storage.
+- Add drafts and custom templates manually with names, notes and editable Lua source.
 - Six starter templates for attacks, combos, enemies and bosses.
 - Function folding and improved autocomplete behavior.
 
