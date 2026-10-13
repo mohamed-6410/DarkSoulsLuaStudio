@@ -1,0 +1,118 @@
+<Window x:Class="DS1LuaStudio.App.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:services="clr-namespace:DS1LuaStudio.App.Services"
+        Title="Appearance" Width="560" Height="600"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource BrushBgDark}"
+        Foreground="{DynamicResource BrushTextPrimary}"
+        TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+
+    <Window.Resources>
+        <services:HexToBrushConverter x:Key="HexBrush" />
+
+        <DataTemplate x:Key="SwatchItem">
+            <StackPanel Orientation="Horizontal">
+                <Border Width="16" Height="16" CornerRadius="3" VerticalAlignment="Center"
+                        Background="{Binding Hex, Converter={StaticResource HexBrush}}" />
+                <TextBlock Text="{Binding Name}" Margin="9,0,0,0" VerticalAlignment="Center"
+                           Foreground="{DynamicResource BrushTextPrimary}" />
+                <TextBlock Text="{Binding Hex}" Margin="10,0,0,0" VerticalAlignment="Center"
+                           Foreground="{DynamicResource BrushTextMuted}" FontSize="10.5" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <Border DockPanel.Dock="Bottom" Background="{DynamicResource BrushBgPanel}"
+                BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="0,1,0,0" Padding="14">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Reset to defaults" Click="OnResetClick" />
+                <Button Content="Cancel" Margin="8,0,0,0" Click="OnCancelClick" IsCancel="True" />
+                <Button Content="Apply" Margin="8,0,0,0" Style="{StaticResource AccentButton}"
+                        Click="OnApplyClick" IsDefault="True" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="18,16,18,16">
+
+                <TextBlock Text="CODE EDITOR" Style="{StaticResource SectionHeader}" />
+
+                <TextBlock Text="Code text colour" Margin="0,0,0,5"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+                <ComboBox x:Name="EditorForegroundBox" ItemTemplate="{StaticResource SwatchItem}" />
+
+                <TextBlock Text="Editor background" Margin="0,12,0,5"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+                <ComboBox x:Name="EditorBackgroundBox" ItemTemplate="{StaticResource SwatchItem}" />
+
+                <TextBlock Text="Font" Margin="0,12,0,5"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox x:Name="FontFamilyBox" Width="250" />
+                    <TextBlock Text="Size" Margin="16,0,0,0" VerticalAlignment="Center"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                    <Slider x:Name="FontSizeSlider" Width="140" Minimum="10" Maximum="22"
+                            VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" />
+                    <TextBlock x:Name="FontSizeLabel" Margin="10,0,0,0" VerticalAlignment="Center"
+                               Width="34" Foreground="{DynamicResource BrushTextPrimary}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                    <CheckBox x:Name="LineNumbersCheck" Content="Show line numbers" />
+                    <CheckBox x:Name="WordWrapCheck" Content="Wrap long lines" Margin="22,0,0,0" />
+                </StackPanel>
+
+                <Border Margin="0,14,0,0" Padding="12" CornerRadius="4"
+                        Background="{DynamicResource BrushBgPanel}">
+                    <StackPanel>
+                        <TextBlock Text="DARK SOULS OUTPUT" Style="{StaticResource SectionHeader}" />
+                        <CheckBox x:Name="Compile32BitCheck"
+                                  Content="Compile Lua 5.0 with a 32-bit size_t (PTDE compatible)"
+                                  ToolTip="The bundled compiler emits 64-bit string lengths. Dark Souls PTDE's Lua was built with a 32-bit size_t, so enable this to produce chunks the game can load." />
+                        <TextBlock Margin="24,6,0,0" FontSize="11" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource BrushTextMuted}"
+                                   Text="DS1: 32-bit for new scripts. DS3: always 64-bit for new scripts. Existing bytecode keeps its original width." />
+                        <CheckBox x:Name="NameArgsCheck" Margin="0,12,0,0"
+                                  Content="Name AI arguments from .luainfo"
+                                  ToolTip="Replaces generated f1_arg0 style parameters with the real callback parameters (ai, goal, paramTbl), using the goal table found next to the script." />
+                        <TextBlock Margin="24,6,0,0" FontSize="11" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource BrushTextMuted}"
+                                   Text="Turn off to see the raw decompiler output." />
+                    </StackPanel>
+                </Border>
+
+                <Border Height="1" Margin="0,18,0,16" Background="{DynamicResource BrushBorderSubtle}" />
+
+                <TextBlock Text="INTERFACE" Style="{StaticResource SectionHeader}" />
+
+                <TextBlock Text="Interface text colour" Margin="0,0,0,5"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+                <ComboBox x:Name="InterfaceTextBox" ItemTemplate="{StaticResource SwatchItem}" />
+
+                <TextBlock Text="Accent colour" Margin="0,12,0,5"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+                <ComboBox x:Name="AccentBox" ItemTemplate="{StaticResource SwatchItem}" />
+
+                <Border Margin="0,18,0,0" Padding="12" CornerRadius="4"
+                        Background="{DynamicResource BrushBgPanel}">
+                    <StackPanel>
+                        <TextBlock Text="Preview" Style="{DynamicResource SectionHeader}" />
+                        <TextBlock Text="local GOAL_COMMON_Stay = { ai = self, goal = goal }"
+                                   FontFamily="Cascadia Mono, Consolas, Courier New"
+                                   Foreground="{DynamicResource BrushAccent}" />
+                        <TextBlock Text="-- goal names and engine calls are highlighted"
+                                   FontFamily="Cascadia Mono, Consolas, Courier New"
+                                   Foreground="{DynamicResource BrushTextMuted}" Margin="0,4,0,0" />
+                        <TextBlock Text="Interface text uses the colour picked above."
+                                   Foreground="{DynamicResource BrushTextPrimary}" Margin="0,10,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="Settings are saved to %APPDATA%\DS1LuaStudio\settings.json"
+                           Foreground="{DynamicResource BrushTextMuted}" FontSize="10.5" Margin="0,14,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

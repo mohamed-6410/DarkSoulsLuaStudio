@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+dist/
+DS3-Luascripts/
+*.mp4
+*.log
+**/HavokScript_FinalRelease.dll
+.release-tools/
+tools/UiProbe/*.png

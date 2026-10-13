@@ -1,0 +1,49 @@
+<Window x:Class="DS1LuaStudio.App.Views.SaveFormatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Save script" Width="580" SizeToContent="Height"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Background="{DynamicResource BrushBgDark}"
+        Foreground="{DynamicResource BrushTextPrimary}"
+        TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+
+    <StackPanel Margin="18,16,18,14">
+
+        <TextBlock x:Name="IntroText" TextWrapping="Wrap"
+                   Foreground="{DynamicResource BrushTextSecondary}" />
+
+        <!-- The warning is the whole point of this dialog: the file on disk is real source, and
+             compiling over it is not something that can be undone. -->
+        <Border x:Name="WarningBorder" Margin="0,12,0,0" Padding="12,9" CornerRadius="4"
+                Background="{DynamicResource BrushBgPanel}"
+                BorderBrush="{DynamicResource BrushWarning}" BorderThickness="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="!" Margin="0,0,9,0" FontWeight="Bold"
+                           Foreground="{DynamicResource BrushWarning}" />
+                <TextBlock x:Name="WarningText" TextWrapping="Wrap" MaxWidth="440" />
+            </StackPanel>
+        </Border>
+
+        <Border Margin="0,14,0,0" Padding="13,11" CornerRadius="4"
+                Background="{DynamicResource BrushBgPanel}">
+            <StackPanel>
+                <RadioButton x:Name="SourceOption" GroupName="Format" Margin="0,0,0,9"
+                             Content="Save the edited source back as text">
+                    <RadioButton.ToolTip>
+                        <TextBlock Text="Keeps the file readable and editable. This is the only choice that can be loaded by the text-based DS1 modding tools." />
+                    </RadioButton.ToolTip>
+                </RadioButton>
+                <RadioButton x:Name="CompiledOption" GroupName="Format" Margin="0,0,0,9"
+                             Content="Compile to Lua 5.0 bytecode and write it over the file" />
+                <RadioButton x:Name="BothOption" GroupName="Format"
+                             Content="Both: source at the original path, bytecode beside it" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Cancel" Click="OnCancelClick" IsCancel="True" />
+            <Button Content="Save" Margin="8,0,0,0" Style="{StaticResource AccentButton}"
+                    Click="OnSaveClick" IsDefault="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

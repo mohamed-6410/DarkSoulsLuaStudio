@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- Only for the folder chooser; WPF itself does not need WinForms. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>DS1LuaStudio.App</RootNamespace>
+    <AssemblyName>DS1LuaStudio</AssemblyName>
+    <Version>1.2.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <!-- The bundled Lua 5.0 compiler (lua502.dll) is x64 only. -->
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!--
+      WFAC010 asks for ApplicationHighDpiMode instead of manifest DPI settings. That advice is for
+      WinForms apps; this one is WPF, which reads its per-monitor DPI awareness from app.manifest.
+      Following it would silently downgrade the app to system-DPI scaling.
+    -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DS1LuaStudio.Core\DS1LuaStudio.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The Lua 5.0 compiler native library travels with the app so scripts can be rebuilt. -->
+    <None Include="..\LuaCompiler\LuaNative\lua502.dll">
+      <Link>LuaNative\lua502.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Picks up an optional HavokScript_FinalRelease.dll if the user supplies one. -->
+    <None Include="..\LuaCompiler\LuaNative\*.dll" Exclude="..\LuaCompiler\LuaNative\lua502.dll">
+      <Link>LuaNative\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

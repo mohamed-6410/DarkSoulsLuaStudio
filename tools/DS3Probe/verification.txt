@@ -1,0 +1,32 @@
+WARN aicommon.luabnd.dcx common_um_Yoshihi.lua functions=1
+WARN aicommon.luabnd.dcx 021600_battle.lua functions=1
+Checked aicommon.luabnd.dcx
+Checked eventcommon.luabnd.dcx
+Checked m20_00_90_00.luabnd.dcx
+Checked m20_01_00_00.luabnd.dcx
+Checked m20_30_00_00.luabnd.dcx
+Checked m21_00_00_00.luabnd.dcx
+Checked m29_00_00_00.luabnd.dcx
+Checked m29_01_00_00.luabnd.dcx
+Checked m29_01_00_99.luabnd.dcx
+Checked m29_02_00_00.luabnd.dcx
+Checked m30_00_00_00.luabnd.dcx
+Checked m30_01_00_00.luabnd.dcx
+Checked m31_00_00_00.luabnd.dcx
+Checked m32_00_00_00.luabnd.dcx
+Checked m33_00_00_00.luabnd.dcx
+Checked m34_00_00_00.luabnd.dcx
+Checked m34_01_00_00.luabnd.dcx
+Checked m35_00_00_00.luabnd.dcx
+Checked m36_00_00_00.luabnd.dcx
+Checked m36_90_00_00.luabnd.dcx
+Checked m37_00_00_00.luabnd.dcx
+Checked m38_00_00_00.luabnd.dcx
+Checked m39_00_00_00.luabnd.dcx
+Checked m40_00_00_00.luabnd.dcx
+Checked m41_00_00_00.luabnd.dcx
+Checked m45_00_00_00.luabnd.dcx
+Checked m50_00_00_00.luabnd.dcx
+Checked m51_00_00_00.luabnd.dcx
+Checked m51_01_00_00.luabnd.dcx
+scripts=1106 infos=28 gnls=29 symbols=10480 decompileFailures=0 warnedScripts=2 compileFailures=0
